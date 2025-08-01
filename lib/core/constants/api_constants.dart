@@ -1,12 +1,18 @@
 class ApiConstants {
   // NGA Server API
-  static const String baseUrl = 'http://5.104.107.253:3000/api';
+  static const String baseUrl = 'https://nextgenerationaustria.at/political-app-api/api';
   
   // Auth Endpoints
   static const String login = '$baseUrl/auth/login';
   static const String register = '$baseUrl/auth/register';
   static const String profile = '$baseUrl/auth/profile';
   
+  // ========== NEUE EMAIL-VERIFIZIERUNG ==========
+  static const String sendVerification = '$baseUrl/auth/send-verification';
+  static const String verifyEmail = '$baseUrl/auth/verify-email';
+  static const String updateProfile = '$baseUrl/auth/update-profile';
+  static const String changePassword = '$baseUrl/auth/change-password';
+
   // Polls Endpoints
   static const String polls = '$baseUrl/polls';
   static String pollById(int id) => '$polls/$id';

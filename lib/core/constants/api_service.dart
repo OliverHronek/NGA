@@ -7,7 +7,7 @@ class ApiService {
   static Future<bool> testConnection() async {
     try {
       final response = await http.get(
-        Uri.parse('http://5.104.107.253:3000/health'),
+        Uri.parse('https://nextgenerationaustria.at/political-app-api:3000/health'),
         headers: ApiConstants.headers,
       );
       
