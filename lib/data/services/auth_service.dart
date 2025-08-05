@@ -36,8 +36,10 @@ class AuthService {
   // Login mit verbesserter Fehlerbehandlung
   static Future<Map<String, dynamic>> login(String username, String password) async {
     try {
-      // Erst Domain-Erreichbarkeit testen
-      //await _testConnection();
+      // Nur bei remote server testen
+      if (!ApiConstants.baseUrl.contains('localhost')) {
+        await _testConnection();
+      }
       
       final response = await http.post(
         Uri.parse(ApiConstants.login),

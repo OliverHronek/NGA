@@ -77,6 +77,8 @@ app.get('/health', (req, res) => {
 });
 
 // API routes
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
 app.use('/api/forum', forumRoutes);
 
 // 404 handler

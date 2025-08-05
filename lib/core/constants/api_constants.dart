@@ -7,9 +7,8 @@ class ApiConstants {
   // Use different base URLs for development vs production
   static String get baseUrl {
     if (kIsWeb && isDevelopment) {
-      // During development on web, still use the actual API server
-      // The CORS issue should be resolved by running on port 8080
-      return 'https://nextgenerationaustria.at/political-app-api/api';
+      // During development on web, use local backend
+      return 'http://localhost:3000/api';
     }
     // Production URL
     return 'https://nextgenerationaustria.at/political-app-api/api';
