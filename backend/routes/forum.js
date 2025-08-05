@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const forumController = require('../controllers/forumController'); // Use real controller
 const { authenticateToken } = require('../middleware/auth');
-const forumController = require('../controllers/forumController');
 const logger = require('../config/logger');
 
 // Middleware to log all forum route access
@@ -17,12 +17,15 @@ router.use((req, res, next) => {
 });
 
 // Public routes (no authentication required)
-router.get('/posts', forumController.getPosts);
-router.get('/posts/:id', forumController.getPost);
+router.get('/categories', forumController.getCategories);
+router.get('/categories/:categoryId/posts', forumController.getPostsByCategory);
+router.get('/posts/:id', forumController.getPostById);
 
 // Protected routes (authentication required)
-router.post('/posts/:postId/reactions', authenticateToken, forumController.toggleReaction);
-router.post('/posts/:postId/comments', authenticateToken, forumController.addComment);
+router.post('/categories', authenticateToken, forumController.createCategory);
+router.post('/posts', authenticateToken, forumController.createPost);
+router.post('/posts/:id/comments', authenticateToken, forumController.addComment);
+router.post('/react', authenticateToken, forumController.toggleReaction);
 
 // Test route for debugging authentication
 router.get('/test-auth', authenticateToken, (req, res) => {

@@ -77,12 +77,12 @@ app.get('/health', (req, res) => {
 });
 
 // API routes
-const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/auth'); // Use real auth with database
 app.use('/api/auth', authRoutes);
 app.use('/api/forum', forumRoutes);
 
 // 404 handler
-app.use('*', (req, res) => {
+app.use((req, res) => {
     logger.warn('Route not found', {
         method: req.method,
         url: req.url,
