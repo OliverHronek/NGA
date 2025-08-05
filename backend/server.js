@@ -1,10 +1,11 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const logger = require('./config/logger');
 const forumRoutes = require('./routes/forum');
+const pollsRoutes = require('./routes/polls');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,12 +24,20 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-// CORS configuration
+// CORS configuration - Allow all localhost ports for development
 app.use(cors({
-    origin: [
-        process.env.CORS_ORIGIN || 'http://localhost:8080',
-        'http://localhost:8081'
-    ],
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        // Allow all localhost requests for development
+        if (origin.startsWith('http://localhost:') || origin.startsWith('https://localhost:')) {
+            callback(null, true);
+        } else {
+            console.log('CORS blocked origin:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -83,6 +92,7 @@ app.get('/health', (req, res) => {
 const authRoutes = require('./routes/auth'); // Use real auth with database
 app.use('/api/auth', authRoutes);
 app.use('/api/forum', forumRoutes);
+app.use('/api/polls', pollsRoutes);
 
 // 404 handler
 app.use((req, res) => {

@@ -9,9 +9,7 @@ const pool = new Pool({
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
-  ssl: process.env.DB_HOST !== 'localhost' ? {
-    rejectUnauthorized: false // Ignore certificate validation for remote connections
-  } : false
+  ssl: false // Disable SSL for this server
 });
 
 // Verbindung testen

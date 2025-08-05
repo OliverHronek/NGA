@@ -19,10 +19,7 @@ class ApiService {
     try {
       final response = await client.get(
         Uri.parse('${ApiConstants.baseUrl.replaceAll('/api', '')}/health'),
-        headers: {
-          ...ApiConstants.headers,
-          if (kIsWeb) 'Access-Control-Allow-Origin': '*',
-        },
+        headers: ApiConstants.headers,
       ).timeout(const Duration(seconds: 10));
       
       print('API Response: ${response.statusCode}');
@@ -41,10 +38,7 @@ class ApiService {
   static Future<Map<String, dynamic>> get(String endpoint, {String? token}) async {
     final client = _createClient();
     try {
-      final headers = {
-        ...(token != null ? ApiConstants.authHeaders(token) : ApiConstants.headers),
-        if (kIsWeb) 'Access-Control-Allow-Origin': '*',
-      };
+      final headers = token != null ? ApiConstants.authHeaders(token) : ApiConstants.headers;
 
       final response = await client.get(
         Uri.parse(endpoint),
@@ -77,10 +71,7 @@ class ApiService {
   ) async {
     final client = _createClient();
     try {
-      final headers = {
-        ...(token != null ? ApiConstants.authHeaders(token) : ApiConstants.headers),
-        if (kIsWeb) 'Access-Control-Allow-Origin': '*',
-      };
+      final headers = token != null ? ApiConstants.authHeaders(token) : ApiConstants.headers;
 
       final response = await client.post(
         Uri.parse(endpoint),
@@ -116,10 +107,7 @@ class ApiService {
   ) async {
     final client = _createClient();
     try {
-      final headers = {
-        ...ApiConstants.authHeaders(token),
-        if (kIsWeb) 'Access-Control-Allow-Origin': '*',
-      };
+      final headers = ApiConstants.authHeaders(token);
 
       final response = await client.put(
         Uri.parse(endpoint),
@@ -154,10 +142,7 @@ class ApiService {
   ) async {
     final client = _createClient();
     try {
-      final headers = {
-        ...ApiConstants.authHeaders(token),
-        if (kIsWeb) 'Access-Control-Allow-Origin': '*',
-      };
+      final headers = ApiConstants.authHeaders(token);
 
       final response = await client.delete(
         Uri.parse(endpoint),
