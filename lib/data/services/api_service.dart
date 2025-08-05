@@ -18,7 +18,7 @@ class ApiService {
     final client = _createClient();
     try {
       final response = await client.get(
-        Uri.parse('http://5.104.107.253:3000/health'),
+        Uri.parse('${ApiConstants.baseUrl.replaceAll('/api', '')}/health'),
         headers: {
           ...ApiConstants.headers,
           if (kIsWeb) 'Access-Control-Allow-Origin': '*',
