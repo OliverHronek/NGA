@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "C:\\Users\\olive\\source\\GitHub\\NGA\\backend\\logs\\.7045c1ed44c90c668b46af91b5765f9503cff9ea-audit.json",
+    "files": [
+        {
+            "date": 1754382257832,
+            "name": "C:\\Users\\olive\\source\\GitHub\\NGA\\backend\\logs\\nga-backend-error-2025-08-05.log",
+            "hash": "7cecab84342fa3692f42a4b71c31b06432c1132888518f92cc7d7c5f9f5bc169"
+        }
+    ],
+    "hashType": "sha256"
+}
