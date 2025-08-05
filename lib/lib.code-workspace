@@ -1,0 +1,10 @@
+{
+	"folders": [
+		{
+			"path": "../../../../nga/lib"
+		}
+	],
+	"settings": {
+		"svn.ignoreMissingSvnWarning": true
+	}
+}
