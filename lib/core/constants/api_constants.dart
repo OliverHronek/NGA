@@ -8,10 +8,10 @@ class ApiConstants {
   static String get baseUrl {
     if (kIsWeb && isDevelopment) {
       // During development on web, use local backend
-      return 'http://localhost:3000/api';
+      return 'http://localhost:3000';
     }
     // Production URL
-    return 'https://nextgenerationaustria.at/political-app-api/api';
+    return 'https://nextgenerationaustria.at/political-app-api';
   }
 
 

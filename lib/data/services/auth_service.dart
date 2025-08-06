@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/user_model.dart';
@@ -96,6 +97,12 @@ class AuthService {
 
   // Verbindungstest
   static Future<void> _testConnection() async {
+    // Skip DNS lookup on web platform as InternetAddress.lookup is not supported
+    if (kIsWeb) {
+      print('DNS Lookup übersprungen (Web Platform)');
+      return;
+    }
+    
     try {
       final result = await InternetAddress.lookup('nextgenerationaustria.at');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
