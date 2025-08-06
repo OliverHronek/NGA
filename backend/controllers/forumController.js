@@ -34,6 +34,8 @@ const forumController = {
         SELECT 
           fp.*,
           u.username as author_name,
+          u.first_name,
+          u.last_name,
           COUNT(fc.id) as comment_count,
           COUNT(r.id) as like_count
         FROM forum_posts fp
@@ -41,7 +43,7 @@ const forumController = {
         LEFT JOIN forum_comments fc ON fp.id = fc.post_id
         LEFT JOIN reactions r ON (r.target_type = 'post' AND r.target_id = fp.id AND r.reaction_type = 'like')
         WHERE fp.category_id = $1
-        GROUP BY fp.id, u.username
+        GROUP BY fp.id, u.username, u.first_name, u.last_name
         ORDER BY fp.is_pinned DESC, fp.created_at DESC
         LIMIT $2 OFFSET $3
       `, [categoryId, limit, offset]);
@@ -77,6 +79,8 @@ const forumController = {
         SELECT 
           fp.*,
           u.username as author_name,
+          u.first_name,
+          u.last_name,
           fc.name as category_name
         FROM forum_posts fp
         LEFT JOIN users u ON fp.user_id = u.id
@@ -87,6 +91,9 @@ const forumController = {
       if (postResult.rows.length === 0) {
         return res.status(404).json({ error: 'Post nicht gefunden' });
       }
+
+      console.log('=== DEBUG: Post Data ===');
+      console.log('Post Result:', JSON.stringify(postResult.rows[0], null, 2));
 
       // Views erhöhen
       await pool.query(
@@ -99,12 +106,14 @@ const forumController = {
         SELECT 
           fc.*,
           u.username as author_name,
+          u.first_name,
+          u.last_name,
           COUNT(r.id) as like_count
         FROM forum_comments fc
         LEFT JOIN users u ON fc.user_id = u.id
         LEFT JOIN reactions r ON (r.target_type = 'comment' AND r.target_id = fc.id AND r.reaction_type = 'like')
         WHERE fc.post_id = $1
-        GROUP BY fc.id, u.username
+        GROUP BY fc.id, u.username, u.first_name, u.last_name
         ORDER BY fc.created_at ASC
       `, [id]);
 

@@ -4,8 +4,26 @@ const pollsController = require('../controllers/pollsController');
 const { authenticateToken } = require('../middleware/auth');
 
 // Öffentliche Routes (ohne Login)
-// Alle öffentlichen Abstimmungen abrufen
-router.get('/', pollsController.getAllPolls);
+// Alle öffentlichen Abstimmungen abrufen (mit optionaler Authentifizierung)
+router.get('/', (req, res, next) => {
+  // Optionale Authentifizierung - wenn Token vorhanden, Benutzer laden
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  
+  if (token) {
+    authenticateToken(req, res, (err) => {
+      if (err) {
+        // Bei ungültigem Token trotzdem fortfahren, nur ohne Benutzerinfo
+        req.user = null;
+      }
+      pollsController.getAllPolls(req, res);
+    });
+  } else {
+    // Ohne Token fortfahren
+    req.user = null;
+    pollsController.getAllPolls(req, res);
+  }
+});
 
 // Einzelne Abstimmung abrufen (mit optionaler Authentifizierung)
 router.get('/:id', (req, res, next) => {

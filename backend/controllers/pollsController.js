@@ -15,9 +15,28 @@ const pollsController = {
         ORDER BY p.created_at DESC
       `);
 
+      // Für jeden Poll prüfen, ob der aktuelle User bereits abgestimmt hat
+      const pollsWithUserVotes = await Promise.all(
+        result.rows.map(async (poll) => {
+          let userVote = null;
+          if (req.user) {
+            const voteResult = await pool.query(
+              'SELECT option_id FROM user_votes WHERE user_id = $1 AND poll_id = $2',
+              [req.user.id, poll.id]
+            );
+            userVote = voteResult.rows.length > 0 ? voteResult.rows[0].option_id : null;
+          }
+          
+          return {
+            ...poll,
+            userVote: userVote
+          };
+        })
+      );
+
       res.json({
-        polls: result.rows,
-        count: result.rows.length
+        polls: pollsWithUserVotes,
+        count: pollsWithUserVotes.length
       });
     } catch (error) {
       console.error('Polls abrufen Fehler:', error);

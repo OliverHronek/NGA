@@ -140,7 +140,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     if (authProvider.user != null && authProvider.user!.id == post.userId) {
                       displayName = authProvider.user!.displayName;
                     } else {
-                      displayName = post.authorName != 'Unbekannt' ? post.authorName : 'Unbekannter Benutzer';
+                      // Use the author name from the post model (which already handles first_name + last_name)
+                      displayName = post.authorName.isNotEmpty && post.authorName != 'Unbekannt' 
+                          ? post.authorName 
+                          : 'Unbekannter Benutzer';
                     }
                     
                     return CircleAvatar(
@@ -171,7 +174,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                           if (authProvider.user != null && authProvider.user!.id == post.userId) {
                             displayName = authProvider.user!.displayName;
                           } else {
-                            displayName = post.authorName != 'Unbekannt' ? post.authorName : 'Unbekannter Benutzer';
+                            // Use the author name from the post model (which already handles first_name + last_name)
+                            displayName = post.authorName.isNotEmpty && post.authorName != 'Unbekannt' 
+                                ? post.authorName 
+                                : 'Unbekannter Benutzer';
                           }
                           
                           return Text(
@@ -368,7 +374,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   if (authProvider.user != null && authProvider.user!.id == comment.userId) {
                     displayName = authProvider.user!.displayName;
                   } else {
-                    displayName = comment.authorName != 'Unbekannt' ? comment.authorName : 'Unbekannter Benutzer';
+                    // Use the author name from the comment model (which already handles first_name + last_name)
+                    displayName = comment.authorName.isNotEmpty && comment.authorName != 'Unbekannt' 
+                        ? comment.authorName 
+                        : 'Unbekannter Benutzer';
                   }
                   
                   return CircleAvatar(
@@ -395,7 +404,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   if (authProvider.user != null && authProvider.user!.id == comment.userId) {
                     displayName = authProvider.user!.displayName;
                   } else {
-                    displayName = comment.authorName != 'Unbekannt' ? comment.authorName : 'Unbekannter Benutzer';
+                    // Use the author name from the comment model (which already handles first_name + last_name)
+                    displayName = comment.authorName.isNotEmpty && comment.authorName != 'Unbekannt' 
+                        ? comment.authorName 
+                        : 'Unbekannter Benutzer';
                   }
                   
                   return Text(
