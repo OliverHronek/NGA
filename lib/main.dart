@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
 import 'presentation/providers/dashboard_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'presentation/providers/auth_provider.dart';
@@ -11,12 +12,18 @@ import 'presentation/screens/auth/email_verification_screen.dart';
 import 'presentation/screens/home/home_screen.dart';
 import 'core/constants/app_colors.dart';
 import 'data/services/web_api_service.dart';
+import 'core/network/android_dns_override.dart';
 
 void main() {
-  // Initialize Web API Service for better CORS handling
+  // Initialize platform-specific configurations
   if (kIsWeb) {
     WebApiService.initialize();
+  } else if (Platform.isAndroid && kDebugMode) {
+    // CLEAN CONFIGURATION - matches first working APK
+    // NO HttpOverrides to interfere with Flutter's standard HTTP client
+    print('🔧 Android Platform erkannt - Using CLEAN HTTP client (wie erste APK)');
   }
+  
   runApp(const NGAApp());
 }
 
@@ -65,35 +72,16 @@ class NGAApp extends StatelessWidget {
       primaryColor: AppColors.primary,
       scaffoldBackgroundColor: AppColors.background,
       
-      // Text Theme mit Google Fonts
-      textTheme: GoogleFonts.robotoTextTheme().copyWith(
-        headlineLarge: GoogleFonts.roboto(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: AppColors.textPrimary,
-        ),
-        headlineMedium: GoogleFonts.roboto(
-          fontSize: 24,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
-        ),
-        bodyLarge: GoogleFonts.roboto(
-          fontSize: 16,
-          color: AppColors.textPrimary,
-        ),
-        bodyMedium: GoogleFonts.roboto(
-          fontSize: 14,
-          color: AppColors.textSecondary,
-        ),
-      ),
+      // Text Theme mit fallback für mobile
+      textTheme: _buildTextTheme(),
       
       // App Bar Theme
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 2,
         centerTitle: true,
-        titleTextStyle: GoogleFonts.roboto(
+        titleTextStyle: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: Colors.white,
@@ -149,6 +137,30 @@ class NGAApp extends StatelessWidget {
         unselectedItemColor: AppColors.textSecondary,
         type: BottomNavigationBarType.fixed,
         elevation: 8,
+      ),
+    );
+  }
+
+  TextTheme _buildTextTheme() {
+    // Use only system fonts for mobile to avoid network dependencies
+    return const TextTheme(
+      headlineLarge: TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: AppColors.textPrimary,
+      ),
+      headlineMedium: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
+        color: AppColors.textPrimary,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 16,
+        color: AppColors.textPrimary,
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 14,
+        color: AppColors.textSecondary,
       ),
     );
   }

@@ -1,18 +1,21 @@
+import 'package:flutter/foundation.dart';
+
 class ApiConstants {
   // NGA Server API
   
-  static const bool kIsWeb = identical(0, 0.0);
-  static const bool isDevelopment = bool.fromEnvironment('dart.vm.product') == false;
-
   // Use different base URLs for development vs production
   static String get baseUrl {
-    if (kIsWeb && isDevelopment) {
+    if (kIsWeb && kDebugMode) {
       // During development on web, use local backend
       return 'http://localhost:3000';
     }
-    // Production URL
+    
+    // Production URL - DNS funktioniert, also verwenden wir die Domain!
     return 'https://nextgenerationaustria.at/political-app-api';
   }
+
+  // Fallback IP address if DNS fails
+  static String get fallbackBaseUrl => 'https://5.104.107.253/political-app-api';
 
 
   // Auth Endpoints

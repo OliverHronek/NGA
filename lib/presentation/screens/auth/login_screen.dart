@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/common/custom_text_field.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/network/network_test.dart';
+import '../../../core/debug/network_debug.dart';
 import 'register_screen.dart';
 import '../home/home_screen.dart';
 
@@ -18,6 +21,18 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Starte COMPREHENSIVE Netzwerk-Diagnose beim Laden der App
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      NetworkTest.runDiagnostics();
+      
+      // Run comprehensive debug tests
+      NetworkDebug.runAllTests();
+    });
+  }
 
   @override
   void dispose() {
@@ -247,6 +262,32 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
+                
+                // DEBUG BUTTON - Only in debug mode
+                if (kDebugMode) ...[
+                  const SizedBox(height: 16),
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('🔍 Running comprehensive network tests...')),
+                        );
+                        
+                        await NetworkDebug.runAllTests();
+                        
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('✅ Network tests completed - check logs!')),
+                        );
+                      },
+                      icon: const Icon(Icons.network_check),
+                      label: const Text('DEBUG: Run Network Tests'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
                 
                 const SizedBox(height: 40),
               ],
